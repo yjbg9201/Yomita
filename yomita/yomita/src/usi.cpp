@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
+#include <cmath>
 
 #include "usi.h"
 #include "book.h"
@@ -469,6 +471,9 @@ std::string USI::score(Score s)
 {
     assert(-SCORE_INFINITE < s && s < SCORE_INFINITE);
 
+    if (std::string(Options["ScoreOutput"]) == "winrate")
+        return winrate(s);
+
     std::stringstream ss;
 
     if (abs(s) < SCORE_MATE - MAX_PLY)
@@ -477,4 +482,33 @@ std::string USI::score(Score s)
         ss << "mate " << (s > 0 ? SCORE_MATE - s - 1 : -SCORE_MATE - s + 1);
 
     return ss.str();
+}
+
+// Scoreを期待勝率に変換して"winrate y"の形の文字列にする。
+// y = 1 / (1 + exp(-x / P))  (xは評価値[cp]、Pはポナンザ定数)
+// 詰みのスコアの場合は勝ちなら1、負けなら0とする。
+std::string USI::winrate(Score s)
+{
+    assert(-SCORE_INFINITE < s && s < SCORE_INFINITE);
+
+    double y;
+
+    if (abs(s) < SCORE_MATE - MAX_PLY)
+    {
+        const double x = (double)s * 100 / PAWN_SCORE;
+        const double p = (int)Options["PonanzaConstant"];
+        y = 1.0 / (1.0 + std::exp(-x / p));
+    }
+    else
+        y = s > 0 ? 1.0 : 0.0;
+
+    std::stringstream ss;
+    ss << "winrate " << std::fixed << std::setprecision(4) << y;
+    return ss.str();
+}
+
+// 評価値の行とは別に期待勝率の行も出力するかどうか。
+bool USI::outputWinrateLine()
+{
+    return std::string(Options["ScoreOutput"]) == "both";
 }
