@@ -100,6 +100,10 @@ void OptionsMap::init()
     (*this)["UseBook"]               = Option(true);
     (*this)["BookName"]              = Option("book.txt");
     (*this)["ResignScore"]           = Option(-32000, -32000, 32000);
+    // 形勢判断の出力形式。cp : 評価値(従来通り), winrate : 期待勝率のみ, both : 評価値と期待勝率の両方
+    (*this)["ScoreOutput"]           = Option(std::vector<std::string>{ "cp", "winrate", "both" }, "cp");
+    // 評価値(cp)から期待勝率への変換 y = 1 / (1 + exp(-x / P)) に使う定数P(ポナンザ定数)
+    (*this)["PonanzaConstant"]       = Option(600, 1, 100000);
 #ifdef USE_PROGRESS
     (*this)["ProgressDir"]           = Option("progress/0.104809");
 #endif

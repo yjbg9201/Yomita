@@ -200,6 +200,9 @@ void MainThread::search()
     {
         root_moves.emplace_back(MOVE_NONE);
         SYNC_COUT << "info depth 0 score " << USI::score(-SCORE_MATE) << SYNC_ENDL;
+
+        if (USI::outputWinrateLine())
+            SYNC_COUT << "info depth 0 score " << USI::winrate(-SCORE_MATE) << SYNC_ENDL;
     }
 
     // 宣言勝ち
@@ -207,6 +210,9 @@ void MainThread::search()
     {
         declare_win = true;
         SYNC_COUT << "info depth 0 score " << USI::score(SCORE_MATE) << SYNC_ENDL;
+
+        if (USI::outputWinrateLine())
+            SYNC_COUT << "info depth 0 score " << USI::winrate(SCORE_MATE) << SYNC_ENDL;
     }
 
     else
@@ -1508,6 +1514,13 @@ std::string USI::pv(const Thread* th, Depth depth, Score alpha, Score beta)
 
         for (Move m : root_moves[i].pv)
             ss << " " << toUSI(m);
+
+        // ScoreOutputがbothなら、期待勝率を別の行で出力する。
+        if (USI::outputWinrateLine())
+            ss << "\ninfo"
+               << " depth "   << d / ONE_PLY
+               << " multipv " << i + 1
+               << " score "   << USI::winrate(s);
     }
 
     return ss.str();

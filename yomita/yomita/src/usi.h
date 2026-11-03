@@ -169,6 +169,8 @@ namespace USI
     void go(const Board& b, std::istringstream& ss_cmd);
 
     std::string score(Score s);
+    std::string winrate(Score s);
+    bool outputWinrateLine();
     std::string pv(const Thread* th, Depth depth, Score alpha, Score beta);
 }
 
