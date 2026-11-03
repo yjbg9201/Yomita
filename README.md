@@ -23,6 +23,7 @@ USIオプションで、形勢判断を評価値(cp)の代わりに、または�
 |---|---|---|
 | `ScoreOutput` | `cp` | `cp`: 従来通り `info score cp x` / `winrate`: `info ... score winrate y` / `both`: 評価値の行に加えて `info depth d multipv n score winrate y` の行も出力 |
 | `PonanzaConstant` | `600` | 変換式 y = 1 / (1 + exp(-x / P)) の定数 P (1〜100000) |
+| `UseScoreMate` | `true` | `true`: 詰みを `score mate N` で出力 / `false`: 詰みを `score cp 32000`(負けは `-32000`)で出力 |
 
 y は 0〜1 の小数(小数点以下4桁)で、詰みの場合は勝ちなら 1、負けなら 0 になります。
 なお `score winrate` はUSIプロトコルの標準ではないため、GUIによっては表示できない場合があります。
