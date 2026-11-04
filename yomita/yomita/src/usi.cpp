@@ -478,6 +478,11 @@ std::string USI::score(Score s)
 
     if (abs(s) < SCORE_MATE - MAX_PLY)
         ss << "cp " << s * 100 / PAWN_SCORE;
+
+    // UseScoreMateがfalseなら、詰みのスコアもcpで出力する(勝ちなら32000、負けなら-32000)。
+    else if (!(bool)Options["UseScoreMate"])
+        ss << "cp " << (s > 0 ? 32000 : -32000);
+
     else
         ss << "mate " << (s > 0 ? SCORE_MATE - s - 1 : -SCORE_MATE - s + 1);
 

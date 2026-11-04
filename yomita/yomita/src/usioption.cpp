@@ -104,6 +104,8 @@ void OptionsMap::init()
     (*this)["ScoreOutput"]           = Option(std::vector<std::string>{ "cp", "winrate", "both" }, "cp");
     // 評価値(cp)から期待勝率への変換 y = 1 / (1 + exp(-x / P)) に使う定数P(ポナンザ定数)
     (*this)["PonanzaConstant"]       = Option(600, 1, 100000);
+    // 詰みのスコアをscore mateで出力するか。falseならscore cp 32000(負けは-32000)で出力する。
+    (*this)["UseScoreMate"]          = Option(true);
 #ifdef USE_PROGRESS
     (*this)["ProgressDir"]           = Option("progress/0.104809");
 #endif
